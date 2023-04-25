@@ -1,6 +1,8 @@
 package com.projeto.alunos;
 
 import com.projeto.alunos.model.Aluno;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,19 +29,19 @@ public class HelloController implements Initializable {
     private TableView<Aluno> tabela;
 
     @FXML
-    private TableColumn<Aluno, Float> tableColumnMedia;
+    private TableColumn<Aluno, SimpleFloatProperty> tableColumnMedia;
 
     @FXML
-    private TableColumn<Aluno, String> tableColumnNome;
+    private TableColumn<Aluno, SimpleStringProperty> tableColumnNome;
 
     @FXML
-    private TableColumn<Aluno, Float> tableColumnPrimeiraNota;
+    private TableColumn<Aluno, SimpleFloatProperty> tableColumnPrimeiraNota;
 
     @FXML
-    private TableColumn<Aluno, Float> tableColumnSegundaNota;
+    private TableColumn<Aluno, SimpleFloatProperty> tableColumnSegundaNota;
 
     @FXML
-    private TableColumn<Aluno, String> tableColumnSituação;
+    private TableColumn<Aluno, SimpleStringProperty> tableColumnSituação;
 
     @FXML
     private TextField tfNome;
@@ -70,7 +72,7 @@ public class HelloController implements Initializable {
         observableListAlunos = FXCollections.observableArrayList(alunos);
         tabela.setItems(observableListAlunos);
 
-        tableColumnNome.setCellValueFactory(new PropertyValueFactory<Aluno,String>("nome"));
+        tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
     }
 
     @Override

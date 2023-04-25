@@ -1,81 +1,109 @@
 package com.projeto.alunos.model;
 
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 public class Aluno {
-    private int id;
-    private String nome;
-    private float primeiraNota;
-    private float segundaNota;
-    private float media;
-    private String situacao;
+    private SimpleIntegerProperty id;
+    private SimpleStringProperty nome;
+    private SimpleFloatProperty primeiraNota;
+    private SimpleFloatProperty segundaNota;
+    private SimpleFloatProperty media;
+    private SimpleStringProperty situacao;
 
     public Aluno() {
     }
 
     public Aluno(String nome, float primeiraNota, float segundaNota) {
-        this.nome = nome;
-        this.primeiraNota = primeiraNota;
-        this.segundaNota = segundaNota;
+        this.nome = new SimpleStringProperty(nome);
+        this.primeiraNota = new SimpleFloatProperty(primeiraNota);
+        this.segundaNota = new SimpleFloatProperty(segundaNota);
     }
 
     public Aluno(int auxint, String auxString1, float auxFloat1, float auxFloat2, float media, String auxString2) {
-        this.id = auxint;
-        this.nome = auxString1;
-        this.primeiraNota = auxFloat1;
-        this.segundaNota = auxFloat2;
-        this.media = media;
-        this.situacao = auxString2;
+        this.id = new SimpleIntegerProperty(auxint);
+        this.nome = new SimpleStringProperty(auxString1);
+        this.primeiraNota = new SimpleFloatProperty(auxFloat1);
+        this.segundaNota = new SimpleFloatProperty(auxFloat2);
+        this.media = new SimpleFloatProperty(media);
+        this.situacao = new SimpleStringProperty(auxString2);
     }
 
     @Override
     public String toString() {
-        return getNome();
+        return this.nome.get();
+    }
+
+    public int getId() {
+        return id.get();
+    }
+
+    public SimpleIntegerProperty idProperty() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id.set(id);
     }
 
     public String getNome() {
+        return nome.get();
+    }
+
+    public SimpleStringProperty nomeProperty() {
         return nome;
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        this.nome.set(nome);
     }
 
     public float getPrimeiraNota() {
+        return primeiraNota.get();
+    }
+
+    public SimpleFloatProperty primeiraNotaProperty() {
         return primeiraNota;
     }
 
     public void setPrimeiraNota(float primeiraNota) {
-        this.primeiraNota = primeiraNota;
+        this.primeiraNota.set(primeiraNota);
     }
 
     public float getSegundaNota() {
+        return segundaNota.get();
+    }
+
+    public SimpleFloatProperty segundaNotaProperty() {
         return segundaNota;
     }
 
     public void setSegundaNota(float segundaNota) {
-        this.segundaNota = segundaNota;
+        this.segundaNota.set(segundaNota);
     }
 
     public float getMedia() {
+        return media.get();
+    }
+
+    public SimpleFloatProperty mediaProperty() {
         return media;
     }
 
     public void setMedia(float media) {
-        this.media = media;
+        this.media.set(media);
     }
 
     public String getSituacao() {
+        return situacao.get();
+    }
+
+    public SimpleStringProperty situacaoProperty() {
         return situacao;
     }
 
     public void setSituacao(String situacao) {
-        this.situacao = situacao;
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id){
-        this.id = id;
+        this.situacao.set(situacao);
     }
 }

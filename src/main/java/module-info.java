@@ -5,5 +5,8 @@ module com.projeto.alunos {
 
 
     opens com.projeto.alunos to javafx.fxml;
+    opens com.projeto.alunos.model to javafx.fxml;
+
     exports com.projeto.alunos;
+    exports com.projeto.alunos.model;
 }
