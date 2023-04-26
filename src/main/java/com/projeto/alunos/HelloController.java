@@ -1,5 +1,7 @@
 package com.projeto.alunos;
 
+import com.projeto.alunos.exeptions.NaoContidoEntreZeroEDezExeption;
+import com.projeto.alunos.exeptions.NomeNullExeption;
 import com.projeto.alunos.model.Aluno;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -55,31 +57,88 @@ public class HelloController implements Initializable {
     @FXML
     void onCadastrarClick(ActionEvent event) {
         if (event.getSource() == btnCadastrar) {
-            tfNome.setStyle(null);
-            tfPrimeiraNota.setStyle(null);
-            tfSegundaNota.setStyle(null);
+            limparCssTf();
 
             String nome;
+            float primeiraNota = -1;
+            float segundaNota = -1;
+            boolean contido1;
+            boolean contido2;
+            final String cssDefault = "-fx-border-color: red;-fx-border-width: 4;";
 
-            if (tfNome.getText().length() > 0 && tfNome.getText() != null) {
+            int flagNotaNumberFormatExeption = 0;
+            try {
+                primeiraNota = Float.parseFloat(tfPrimeiraNota.getText());
+                segundaNota = Float.parseFloat(tfSegundaNota.getText());
                 nome = tfNome.getText();
-                System.out.println("peguei o nome " + nome);
 
-                Aluno a1 = new Aluno(nome, 10, 10);
-                alunos.add(a1);
-                observableListAlunos = FXCollections.observableArrayList(alunos);
-                tabela.setItems(observableListAlunos);
+                if (nome.isBlank()) {
+                    throw new NomeNullExeption(nome);
+                } else if (tfPrimeiraNota.getText().isBlank()) {
+                    flagNotaNumberFormatExeption = 1;
+                    throw new NumberFormatException();
+                } else if (tfSegundaNota.getText().isBlank()) {
+                    flagNotaNumberFormatExeption = 2;
+                    throw new NumberFormatException();
+                }
+
+                contido1 = primeiraNota >= 0 && primeiraNota <= 10;
+                if (!contido1) {
+                    throw new NaoContidoEntreZeroEDezExeption(primeiraNota, 1);
+                }
+
+                contido2 = segundaNota >= 0 && segundaNota <= 10;
+                if (!contido2) {
+                    throw new NaoContidoEntreZeroEDezExeption(segundaNota, 2);
+                }
+
+                Aluno aluno = new Aluno(nome, primeiraNota, segundaNota);
+                alunos.add(aluno);
                 mostrarAlertaCadastro();
-            } else {
-                final String cssDefault = "-fx-border-color: red;-fx-border-width: 4;";
+                carregarTableViewAlunos();
+
+            } catch (NaoContidoEntreZeroEDezExeption exeption) {
+                if (exeption.getNota() == 1) {
+                    mostrarAlertaCadastroNotaInvalida();
+                    tfPrimeiraNota.setStyle(cssDefault);
+                    tfPrimeiraNota.setPromptText("INSIRA UMA NOTA ENTRE 0 E 10");
+                } else {
+                    mostrarAlertaCadastroNotaInvalida();
+                    tfSegundaNota.setStyle(cssDefault);
+                    tfSegundaNota.setPromptText("INSIRA UMA NOTA ENTRE 0 E 10");
+                }
+
+            } catch (NomeNullExeption exeption) { // para nome invalido
                 tfNome.setStyle(cssDefault);
                 tfNome.setPromptText("INSIRA UMA NOME");
                 mostrarAlertaCadastroNomeInvalido();
+
+            } catch (NumberFormatException exception) { // nao consigo deixar igual a exessao do naocontido
+                if (flagNotaNumberFormatExeption == 1) {
+                    mostrarAlertaCadastroNotaNull();
+                    tfPrimeiraNota.setStyle(cssDefault);
+                    tfPrimeiraNota.setPromptText("INSIRA UMA NOTA ENTRE 0 E 10");
+                } else if (flagNotaNumberFormatExeption == 2){
+                    mostrarAlertaCadastroNotaNull();
+                    tfSegundaNota.setStyle(cssDefault);
+                    tfSegundaNota.setPromptText("INSIRA UMA NOTA ENTRE 0 E 10");
+                }else {
+                    System.out.println("VEIO ->"+flagNotaNumberFormatExeption);
+                }
             }
-
         }
+    }
 
+    private void limparDadosTf() {
+        tfNome.setText("");
+        tfPrimeiraNota.setText("");
+        tfSegundaNota.setText("");
+    }
 
+    private void limparCssTf() {
+        tfNome.setStyle(null);
+        tfPrimeiraNota.setStyle(null);
+        tfSegundaNota.setStyle(null);
     }
 
     public void carregarTableViewAlunos() {
@@ -88,12 +147,6 @@ public class HelloController implements Initializable {
         tableColumnSegundaNota.setCellValueFactory(new PropertyValueFactory<>("segundaNota"));
         tableColumnMedia.setCellValueFactory(new PropertyValueFactory<>("media"));
         tableColumnSituação.setCellValueFactory(new PropertyValueFactory<>("situacao"));
-
-        Aluno a1 = new Aluno("Rafael", 10, 2);
-        Aluno a2 = new Aluno("Reginaldo", 10, 2);
-
-        alunos.add(a1);
-        alunos.add(a2);
 
         observableListAlunos = FXCollections.observableArrayList(alunos);
         tabela.setItems(observableListAlunos);
@@ -125,8 +178,26 @@ public class HelloController implements Initializable {
     private void mostrarAlertaCadastroNotaInvalida() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Dados invalidos");
+        alert.setHeaderText("NOTAS INVALIDAS");
+        alert.setContentText("Insira notas entre 0 e 10");
+        alert.show();
+    }
+
+    @FXML
+    private void mostrarAlertaCadastroNotaNull(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Dados invalidos");
+        alert.setHeaderText("NOTAS NAO PREENCHIDAS");
+        alert.setContentText("Insira notas entre 0 e 10");
+        alert.show();
+    }
+
+    @FXML
+    private void mostrarAlertaCadastroNotaNaoContidaEntreZeroEDez() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Dados invalidos");
         alert.setHeaderText("");
-        alert.setContentText("notas digitadas fora do padrão de 0 a 10!");
+        alert.setContentText("Notas nao contidas entre 0 e 10!");
         alert.show();
     }
 
