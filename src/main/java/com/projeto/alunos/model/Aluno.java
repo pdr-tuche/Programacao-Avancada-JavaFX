@@ -30,6 +30,28 @@ public class Aluno {
         this.situacao = new SimpleStringProperty(auxString2);
     }
 
+    public void fazerMedia(){
+        float n1 = getPrimeiraNota();
+        float n2 = getSegundaNota();
+        float res = (n1+n2)/2;
+
+        this.media = new SimpleFloatProperty(res);
+        situacao();
+    }
+
+    public void situacao(){
+        float media = getMedia();
+        String situacao = null;
+        if (media < 4){
+            situacao = "reprovado";
+        } else if (media >= 4 && media < 7) {
+            situacao = "recuperação";
+        } else if (media >= 7 && media <= 10) {
+            situacao = "aprovado";
+        }
+        setSituacao(situacao);
+    }
+
     @Override
     public String toString() {
         return this.nome.get();
