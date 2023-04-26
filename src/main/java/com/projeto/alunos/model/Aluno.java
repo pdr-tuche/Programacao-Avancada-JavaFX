@@ -19,6 +19,7 @@ public class Aluno {
         this.nome = new SimpleStringProperty(nome);
         this.primeiraNota = new SimpleFloatProperty(primeiraNota);
         this.segundaNota = new SimpleFloatProperty(segundaNota);
+        fazerMedia(this.primeiraNota, this.segundaNota);
     }
 
     public Aluno(int auxint, String auxString1, float auxFloat1, float auxFloat2, float media, String auxString2) {
@@ -30,17 +31,17 @@ public class Aluno {
         this.situacao = new SimpleStringProperty(auxString2);
     }
 
-    public void fazerMedia(){
-        float n1 = getPrimeiraNota();
-        float n2 = getSegundaNota();
-        float res = (n1+n2)/2;
+    public void fazerMedia(SimpleFloatProperty n1, SimpleFloatProperty n2){
+        float num1 = n1.floatValue();
+        float num2 = n2.floatValue();
+        float res = (num1+num2)/2;
 
         this.media = new SimpleFloatProperty(res);
         situacao();
     }
 
     public void situacao(){
-        float media = getMedia();
+        float media = this.media.floatValue();
         String situacao = null;
         if (media < 4){
             situacao = "reprovado";
@@ -49,7 +50,7 @@ public class Aluno {
         } else if (media >= 7 && media <= 10) {
             situacao = "aprovado";
         }
-        setSituacao(situacao);
+        this.situacao = new SimpleStringProperty(situacao);
     }
 
     @Override

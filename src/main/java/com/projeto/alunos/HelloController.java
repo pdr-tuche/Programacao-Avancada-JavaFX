@@ -64,9 +64,8 @@ public class HelloController implements Initializable {
             float segundaNota = -1;
             boolean contido1;
             boolean contido2;
-            final String cssDefault = "-fx-border-color: red;-fx-border-width: 4;";
+            final String cssDefault = "-fx-border-color: red;-fx-border-width: 2;";
 
-            int flagNotaNumberFormatExeption = 0;
             try {
                 primeiraNota = Float.parseFloat(tfPrimeiraNota.getText());
                 segundaNota = Float.parseFloat(tfSegundaNota.getText());
@@ -75,10 +74,8 @@ public class HelloController implements Initializable {
                 if (nome.isBlank()) {
                     throw new NomeNullExeption(nome);
                 } else if (tfPrimeiraNota.getText().isBlank()) {
-                    flagNotaNumberFormatExeption = 1;
                     throw new NumberFormatException();
                 } else if (tfSegundaNota.getText().isBlank()) {
-                    flagNotaNumberFormatExeption = 2;
                     throw new NumberFormatException();
                 }
 
@@ -114,17 +111,13 @@ public class HelloController implements Initializable {
                 mostrarAlertaCadastroNomeInvalido();
 
             } catch (NumberFormatException exception) { // nao consigo deixar igual a exessao do naocontido
-                if (flagNotaNumberFormatExeption == 1) {
-                    mostrarAlertaCadastroNotaNull();
-                    tfPrimeiraNota.setStyle(cssDefault);
-                    tfPrimeiraNota.setPromptText("INSIRA UMA NOTA ENTRE 0 E 10");
-                } else if (flagNotaNumberFormatExeption == 2){
-                    mostrarAlertaCadastroNotaNull();
-                    tfSegundaNota.setStyle(cssDefault);
-                    tfSegundaNota.setPromptText("INSIRA UMA NOTA ENTRE 0 E 10");
-                }else {
-                    System.out.println("VEIO ->"+flagNotaNumberFormatExeption);
-                }
+                mostrarAlertaCadastroNotaInvalida();
+                tfPrimeiraNota.setText("");
+                tfSegundaNota.setText("");
+                tfPrimeiraNota.setPromptText("INSIRA UMA NOTA ENTRE 0 E 10");
+                tfSegundaNota.setPromptText("INSIRA UMA NOTA ENTRE 0 E 10");
+                tfPrimeiraNota.setStyle(cssDefault);
+                tfSegundaNota.setStyle(cssDefault);
             }
         }
     }
